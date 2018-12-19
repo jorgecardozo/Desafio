@@ -17,6 +17,17 @@ class ModalG extends Component{
     }
     
     toggle= ()=> {
+
+        if(this.state.modal)
+            this.setState({
+                    nombre: '',
+                    apellido: '',
+                    tipo: 1,
+                    documento: '',
+                    email: '',
+                    id: ''
+                });
+
         this.setState({
             modal: !this.state.modal
         });
@@ -24,20 +35,24 @@ class ModalG extends Component{
     }
 
     datos = () =>{
-        this.setState({
-            nombre: this.props.persona.nombre,
-            apellido: this.props.persona.apellido,
-            tipo: this.props.persona.tipoDocumento,
-            documento: this.props.persona.documento,
-            email: this.props.persona.email,
-            id: this.props.persona.id
-        });
+        if(this.props.persona)
+            this.setState({
+                nombre: this.props.persona.nombre,
+                apellido: this.props.persona.apellido,
+                tipo: this.props.persona.tipoDocumento,
+                documento: this.props.persona.documento,
+                email: this.props.persona.email,
+                id: this.props.persona.id
+            });
+        else 
+            console.log("LA PERSONA ES NULA");
+
         this.toggle();
     }
 
     DatosActualizar = () => {
         
-       
+        if(this.nombre==="Actualizar")
         axios.put('http://10.0.0.68:81/personas/'+this.state.id+"/",{
                     nombre: this.state.nombre,
                     apellido: this.state.apellido,
@@ -58,6 +73,34 @@ class ModalG extends Component{
                     .then(function () {
                         // always executed
                     });
+        else{
+            var expresionRegular = /^[a-zA-Z0-9_\-\.~]{2,}@[a-zA-Z0-9_\-\.~]{2,}\.[a-zA-Z]{2,4}$/;
+            if (expresionRegular.test(this.state.email)) {
+                console.log("valido");
+
+                axios.post('http://10.0.0.68:81/personas/', {
+                    nombre: this.state.nombre,
+                    apellido: this.state.apellido,
+                    tipoDocumento: this.state.tipo,
+                    documento: this.state.documento,
+                    email: this.state.email
+                })
+                .then((response)=> {
+                    console.log("Esto se envia a la base de datos");
+                    console.log(response.data.data);
+                    this.toggle();
+                    this.actualizar();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });  
+                this.props.actualizar();
+            }
+            else
+                console.log("Invalido");
+        }
+            
+                    
       
     }
     validarNumero = (e) => {
@@ -98,9 +141,9 @@ class ModalG extends Component{
         let valor;
         (value == "DNI") ? valor = 1 : (value == "Cédula") ? valor = 2: valor=3; 
         console.log("valor de Tipo documento");
-        console.log(valor);
+        console.log(value,"->",valor);
         this.setState({
-            tipoA: valor
+            tipo: valor
         });
     }
 
@@ -109,9 +152,9 @@ class ModalG extends Component{
           <div>
             {/* <Button color="danger" onClick={()=>this.eliminar(persona.id)}>Eliminar</Button> */}
 
-            <Button color="danger" onClick={this.datos}>Actualizar</Button>
+            <Button color="danger" onClick={this.datos}>{this.props.nombre}</Button>
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-              <ModalHeader toggle={this.toggle}>Actualizar Datos</ModalHeader>
+              <ModalHeader toggle={this.toggle}>{this.props.nombre} Datos</ModalHeader>
               <ModalBody>
                 <div className="row mt-4">
                                 <div className="card">
@@ -131,8 +174,9 @@ class ModalG extends Component{
                                                 />
                                             </div>
                                         )}  */}
-
-                                        {
+                                        
+                                        {   
+                                    
                                             this.props.columnas.map((e, i) => {
                                                 console.log("PERSONA: ", e.tipo)
                                                 return (
@@ -156,7 +200,7 @@ class ModalG extends Component{
                                                                             <option>Pasaporte</option> */}
                                                                         </select>
                                                                     </div>:
-
+                                                                    
                                                                     <div className="form-group">
                                                                         <input
                                                                             type={v.type}
@@ -183,7 +227,7 @@ class ModalG extends Component{
                             </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onClick={()=>this.DatosActualizar()}>Actualizar</Button>{' '}
+                <Button color="primary" onClick={()=>this.DatosActualizar()}>{this.props.nombre}</Button>{' '}
                 <Button color="secondary" onClick={this.toggle}>Cancel</Button>
               </ModalFooter>
             </Modal>

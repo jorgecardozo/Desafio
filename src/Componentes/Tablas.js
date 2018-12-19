@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Table } from 'reactstrap';
 import axios from 'axios';
 import ModalG from './ModalG'
+import ModalEliminar from './ModalEliminar';
 
 class Tablas extends Component {
 
@@ -79,6 +80,7 @@ class Tablas extends Component {
 
             <div>
                 {console.log("Columnas: ", this.props.columnas)}
+                <ModalG nombre={"Cargar"} actualizar={this.actualizar} columnas={this.props.columnas} />
                 <Table dark>
                     <thead>
                         {/* Aca genero todas las Columnas dependiendo del contenido de la BD */}
@@ -122,7 +124,8 @@ class Tablas extends Component {
                                 {/* {this.props.columnas.map((col,i)=>
                                     <td>{persona[col]}</td>     
                                 )}  */}
-                                <td> <ModalG persona={persona} actualizar={this.actualizar} columnas={this.props.columnas} /> </td>
+                                <td> <ModalG nombre={"Actualizar"} persona={persona} actualizar={this.actualizar} columnas={this.props.columnas} /> </td>
+                                <td> <ModalEliminar actualizar={this.actualizar} id={persona.id} /></td>
                                 {/* <td> <Button color="danger" onClick={()=>this.eliminar(persona.id)}>Atualizar</Button> </td> */}
                             </tr>
                         )}
