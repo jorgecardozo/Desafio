@@ -52,32 +52,36 @@ class ModalG extends Component{
 
     DatosActualizar = () => {
         
-        if(this.nombre==="Actualizar")
-        axios.put('http://10.0.0.68:81/personas/'+this.state.id+"/",{
-                    nombre: this.state.nombre,
-                    apellido: this.state.apellido,
-                    tipoDocumento: this.state.tipo,
-                    documento: this.state.documento,
-                    email: this.state.email
-                })
-                    .then( (response)=> {
-                        // handle success
-                        if(this.props.actualizar)
-                        this.props.actualizar();
-                        this.toggle();
+        console.log(this.props.nombre);
+
+        if(this.props.nombre==="Actualizar"){
+            console.log("Entro al PUT");
+            axios.put('http://10.0.0.68:81/personas/'+this.state.id+"/",{
+                        nombre: this.state.nombre,
+                        apellido: this.state.apellido,
+                        tipoDocumento: this.state.tipo,
+                        documento: this.state.documento,
+                        email: this.state.email
                     })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                    })
-                    .then(function () {
-                        // always executed
-                    });
-        else{
+                        .then( (response)=> {
+                            // handle success
+                            if(this.props.actualizar)
+                            this.props.actualizar();
+                            this.toggle();
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        })
+                        .then(function () {
+                            // always executed
+                        });
+        }else{
+            console.log("Entro al POST");
             var expresionRegular = /^[a-zA-Z0-9_\-\.~]{2,}@[a-zA-Z0-9_\-\.~]{2,}\.[a-zA-Z]{2,4}$/;
             if (expresionRegular.test(this.state.email)) {
-                console.log("valido");
-
+                // console.log("valido");
+                        
                 axios.post('http://10.0.0.68:81/personas/', {
                     nombre: this.state.nombre,
                     apellido: this.state.apellido,
@@ -86,8 +90,8 @@ class ModalG extends Component{
                     email: this.state.email
                 })
                 .then((response)=> {
-                    console.log("Esto se envia a la base de datos");
-                    console.log(response.data.data);
+                    // console.log("Esto se envia a la base de datos");
+                    // console.log(response.data.data);
                     this.toggle();
                     this.actualizar();
                 })
@@ -99,22 +103,20 @@ class ModalG extends Component{
             else
                 console.log("Invalido");
         }
-            
-                    
-      
     }
+    
     validarNumero = (e) => {
         const { value, name } = e.target;
         var expresionRegular = /^\d{0,8}$/;
         if (expresionRegular.test(value)) {
-            console.log(value, name);
+            // console.log(value, name);
             // console.log("Error");
             this.setState({
                 [name]: value
             });
         }
     }
-
+                        
     validarMail = (e) => {
         const { value, name } = e.target;
 
@@ -124,12 +126,12 @@ class ModalG extends Component{
     }
     
     validarString = (e) => {
-        console.log("Entro a valida");
+        // console.log("Entro a valida");
         const { value, name } = e.target;
         var expresionRegular = /^[a-zA-Z]{0,15}$/;
         if (expresionRegular.test(value)) {
-            console.log(value, name);
-             console.log("Cumplio La expresion Regular");
+            // console.log(value, name);
+            //  console.log("Cumplio La expresion Regular");
             this.setState({
                 [name]: value
             });
@@ -139,9 +141,13 @@ class ModalG extends Component{
     handleTipo = (e) => {
         const { value, name } = e.target;
         let valor;
-        (value == "DNI") ? valor = 1 : (value == "Cédula") ? valor = 2: valor=3; 
-        console.log("valor de Tipo documento");
-        console.log(value,"->",valor);
+        this.setState({
+            tipo: 1
+        });
+
+        (value === "DNI") ? valor = 1 : (value === "Cédula") ? valor = 2: valor=3; 
+         console.log("valor de Tipo documento");
+         console.log(value,"->",valor);
         this.setState({
             tipo: valor
         });
@@ -151,7 +157,7 @@ class ModalG extends Component{
         return (  
           <div>
             {/* <Button color="danger" onClick={()=>this.eliminar(persona.id)}>Eliminar</Button> */}
-
+            {console.log("valor del TipoDocumuento al iniciar: ",this.state.tipo)}
             <Button color="danger" onClick={this.datos}>{this.props.nombre}</Button>
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
               <ModalHeader toggle={this.toggle}>{this.props.nombre} Datos</ModalHeader>
@@ -178,11 +184,11 @@ class ModalG extends Component{
                                         {   
                                     
                                             this.props.columnas.map((e, i) => {
-                                                console.log("PERSONA: ", e.tipo)
+                                                // console.log("PERSONA: ", e.tipo)
                                                 return (
                                                     e.tipo === "form" ?
                                                         e.datos.map((v, i) => {
-                                                            console.log("datos: ", v.tipo)
+                                                            // console.log("datos: ", v.tipo)
                                                             return (
                                                                 v.tipo === "select" ?
                                                                     <div key={i} className="form-group">
@@ -192,16 +198,16 @@ class ModalG extends Component{
                                                                             // value={}
                                                                             onChange={ this[v.onChange]}
                                                                         >   
-                                                                            {v.header.map((e,i)=>
+                                                                            {/* {v.header.map((e,i)=>
                                                                                 <option key={i}>{e}</option>
-                                                                            )}
-                                                                            {/* <option>DNI</option>
-                                                                            <option>Cedula</option>
-                                                                            <option>Pasaporte</option> */}
+                                                                            )} */}
+                                                                            {v.select(this.state.tipo)}
+
+                                                                            
                                                                         </select>
                                                                     </div>:
                                                                     
-                                                                    <div className="form-group">
+                                                                    <div key={i}  className="form-group">
                                                                         <input
                                                                             type={v.type}
                                                                             name={v.name}

@@ -21,12 +21,12 @@ class Tablas extends Component {
 
         axios.get(this.props.url)
             .then((response) => {
-                console.log("Las pido");
-                console.log(response.data.data);
+                // console.log("Las pido");
+                // console.log(response.data.data);
 
                 this.setState({ BD: response.data.data }, () => {
-                    console.log("veo si actualizo en datos");
-                    console.log(this.state.BD);
+                    // console.log("veo si actualizo en datos");
+                    // console.log(this.state.BD);
                 });
             })
             .catch(function (error) {
@@ -59,19 +59,17 @@ class Tablas extends Component {
       
         axios.get('http://10.0.0.68:81/personas/')
             .then((response)=> {
-                console.log("Las pido");
-                console.log(response.data.data);
+                // console.log("Las pido");
+                // console.log(response.data.data);
 
                 this.setState({ BD: response.data.data }, () => {
-                    console.log("veo si actualizo en datos");
-                    console.log(this.state.BD);
+                    // console.log("veo si actualizo en datos");
+                    // console.log(this.state.BD);
                 });
             })
             .catch(function (error) {
                 console.log(error);
             });
-
-
     }
 
     render() {
@@ -105,11 +103,11 @@ class Tablas extends Component {
                             <tr key={i}>
                                 {
                                     this.props.columnas.map((e, i) => {
-                                        console.log("PERSONA: ", e.tipo)
+                                        // console.log("PERSONA: ", e.tipo)
                                         return (
                                             e.tipo === "tabla" ?
                                                 e.columnas.map((col, i) => {
-                                                    console.log("col: ", col)
+                                                    // console.log("col: ", col)
                                                     return (
                                                         <td key={i}>{col.format ? col.format(persona[col.field]) : persona[col.field]}</td>
                                                     );

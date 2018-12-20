@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component , Fragment} from 'react';
+
 export default {
     data: [
         {
@@ -23,11 +24,28 @@ export default {
                             return <div className="badge badge-danger">Cédula</div>;
                         else
                             return <div className="badge badge-warning">Pasaporte</div>;
+                    },
+                    "select": (value) => {
+                        if (value === 1)
+                            return  <Fragment>
+                                        <option>DNI</option> 
+                                        <option>Cédula</option>
+                                        <option>Pasaporte</option>
+                                    </Fragment>;
+                        else if (value === 2)
+                            return  <Fragment>
+                                        <option>Cedula</option> 
+                                        <option>DNI</option>
+                                        <option>Pasaporte</option>
+                                    </Fragment>;
+                        else
+                            return  <Fragment>
+                                        <option>Pasaporte</option> 
+                                        <option>DNI</option>
+                                        <option>Cédula</option>
+                                    </Fragment>;
+                        
                     }
-                },
-                {
-                    "field": "tipoDocumento",
-                    "header": "Tipo Documento",
                 },
                 {
                     "field": "documento",
@@ -72,6 +90,27 @@ export default {
                     "onChange": "handleTipo",
                     "field": "tipoDocumento",
                     "header": ["DNI","Cédula","Pasaporte"],
+                    "select": (value) => {
+                        if (value === 1)
+                            return  <Fragment>
+                                        <option>DNI</option> 
+                                        <option>Cédula</option>
+                                        <option>Pasaporte</option>
+                                    </Fragment>;
+                        else if (value === 2)
+                            return  <Fragment>
+                                        <option>Cedula</option> 
+                                        <option>DNI</option>
+                                        <option>Pasaporte</option>
+                                    </Fragment>;
+                        else
+                            return  <Fragment>
+                                        <option>Pasaporte</option> 
+                                        <option>DNI</option>
+                                        <option>Cédula</option>
+                                    </Fragment>;
+                        
+                    }
                 },
                 {
                     "tipo": "normal",
