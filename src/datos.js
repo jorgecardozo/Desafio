@@ -4,7 +4,7 @@ export default {
     data: [
         {
             "tipo": "tabla",
-             "columnas": ["nombre", "apellido", "tipoDocumento", "documento ", "email"],
+            "columnas": ["nombre", "apellido", "tipoDocumento", "documento ", "email"],
             "columnas": [
                 {
                     "field": "nombre",
@@ -131,7 +131,8 @@ export default {
                     "header": "Email",
                 },
             ],
-            "url": "http://10.0.0.68:81/personas/"
+            "url": "http://10.0.0.68:81/personas/",
+            "CantidadPaginas": 2
         }
     ]
 }

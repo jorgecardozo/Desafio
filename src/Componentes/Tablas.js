@@ -5,20 +5,13 @@ import ModalG from './ModalG'
 import ModalEliminar from './ModalEliminar';
 
 class Tablas extends Component {
-
+    
     constructor(props) {
         super(props);
         this.state = {
-            url: '',
             BD: []
         };
-
-        this.setState({
-            url: 'http://10.0.0.68:81/personas/'
-        });
-
-        console.log("LLamo a la funcion Actualizar");
-
+       
         axios.get(this.props.url)
             .then((response) => {
                 // console.log("Las pido");
@@ -34,30 +27,11 @@ class Tablas extends Component {
             });
     }
 
-    componentDidMount() {
-
-        /*console.log("LLamo a la funcion Actualizar");
-      
-        axios.get(this.state.url)
-            .then((response)=> {
-                console.log("Las pido");
-                console.log(response.data.data);
- 
-                this.setState({ BD: response.data.data }, () => {
-                    console.log("veo si actualizo en datos");
-                    console.log(this.state.BD);
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });*/
-    }
-
     actualizar =(e)=>{
 
         console.log("LLamo a la funcion Actualizar");
-      
-        axios.get('http://10.0.0.68:81/personas/')
+        
+        axios.get(this.props.url)
             .then((response)=> {
                 // console.log("Las pido");
                 // console.log(response.data.data);
@@ -72,6 +46,7 @@ class Tablas extends Component {
             });
     }
 
+    
     render() {
 
         return (
@@ -112,9 +87,8 @@ class Tablas extends Component {
                                                         <td key={i}>{col.format ? col.format(persona[col.field]) : persona[col.field]}</td>
                                                     );
 
-                                                }
-
-                                                ) :
+                                                    }
+                                                ):
                                                 null
                                         );
                                     }
