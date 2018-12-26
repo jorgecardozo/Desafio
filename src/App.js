@@ -48,14 +48,14 @@ class App extends Component {
 
 
   render() {
-    console.log("cantidadPag---->", this.state.cantidadPaginas)
-    console.log("url------------>", this.state.url)
+    // console.log("cantidadPag---->", this.state.cantidadPaginas)
+    // console.log("url------------>", this.state.url)
               
     return (
       <div className="App">
 
               
-        <Tablas url={this.state.url}  columnas={this.state.datos} />
+        <Tablas url={this.state.url}  columnas={this.state.datos} cantidad={this.state.cantidadPaginas} />
         <header className="App-header">
           <a
             className="App-link"

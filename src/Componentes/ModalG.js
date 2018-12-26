@@ -55,7 +55,7 @@ class ModalG extends Component{
         console.log(this.props.nombre);
 
         if(this.props.nombre==="Actualizar"){
-            console.log("Entro al PUT");
+            // console.log("Entro al PUT");
             axios.put('http://10.0.0.68:81/personas/'+this.state.id+"/",{
                         nombre: this.state.nombre,
                         apellido: this.state.apellido,
@@ -77,7 +77,7 @@ class ModalG extends Component{
                             // always executed
                         });
         }else{
-            console.log("Entro al POST");
+            // console.log("Entro al POST");
             var expresionRegular = /^[a-zA-Z0-9_\-\.~]{2,}@[a-zA-Z0-9_\-\.~]{2,}\.[a-zA-Z]{2,4}$/;
             if (expresionRegular.test(this.state.email)) {
                 // console.log("valido");
@@ -146,8 +146,8 @@ class ModalG extends Component{
         });
 
         (value === "DNI") ? valor = 1 : (value === "Cédula") ? valor = 2: valor=3; 
-         console.log("valor de Tipo documento");
-         console.log(value,"->",valor);
+        //  console.log("valor de Tipo documento");
+        //  console.log(value,"->",valor);
         this.setState({
             tipo: valor
         });
@@ -157,7 +157,7 @@ class ModalG extends Component{
         return (  
           <div>
             {/* <Button color="danger" onClick={()=>this.eliminar(persona.id)}>Eliminar</Button> */}
-            {console.log("valor del TipoDocumuento al iniciar: ",this.state.tipo)}
+            {/* {console.log("valor del TipoDocumuento al iniciar: ",this.state.tipo)} */}
             <Button color="danger" onClick={this.datos}>{this.props.nombre}</Button>
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
               <ModalHeader toggle={this.toggle}>{this.props.nombre} Datos</ModalHeader>

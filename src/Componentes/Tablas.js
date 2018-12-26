@@ -1,25 +1,26 @@
 import React, { Component } from 'react';
-import { Button, Table } from 'reactstrap';
+import { Button, Table,Row, Col,Label, Form, Input, FormGroup} from 'reactstrap';
 import axios from 'axios';
 import ModalG from './ModalG'
 import ModalEliminar from './ModalEliminar';
 
 class Tablas extends Component {
-    
+
     constructor(props) {
         super(props);
         this.state = {
-            BD: []
+            BD: [],
+            meta: [],
+            posPag:0,
+            filtrar:'',
+            totalPaginas:0
         };
        
-        axios.get(this.props.url)
+        axios.get(this.props.url+"?"+"pageSize="+this.props.cantidad)
             .then((response) => {
-                // console.log("Las pido");
-                // console.log(response.data.data);
-
-                this.setState({ BD: response.data.data }, () => {
-                    // console.log("veo si actualizo en datos");
-                    // console.log(this.state.BD);
+               
+                this.setState({ BD: response.data.data, meta: response.data.meta,totalPages: response.data.meta.totalPages}, () => {
+                    
                 });
             })
             .catch(function (error) {
@@ -30,29 +31,83 @@ class Tablas extends Component {
     actualizar =(e)=>{
 
         console.log("LLamo a la funcion Actualizar");
-        
-        axios.get(this.props.url)
-            .then((response)=> {
-                // console.log("Las pido");
-                // console.log(response.data.data);
 
-                this.setState({ BD: response.data.data }, () => {
-                    // console.log("veo si actualizo en datos");
-                    // console.log(this.state.BD);
-                });
+        const pos= (this.state.posPag) % this.state.meta.totalPages
+        
+        axios.get(this.props.url+"?"+"pageSize="+this.props.cantidad+"&page="+pos+"&nombre[icontains]="+this.state.filtrar)
+            .then((response)=> {
+                // console.log("Datos de la BD: ",response.data.data);
+                this.setState({ BD: response.data.data, meta: response.data.meta}, () => {
+              });
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
 
+    handleSiguiente = ()=>{
+        console.log("Entro en Sieguiente");
+        let pos=this.state.posPag+1;
+        console.log("pagina siguiente: ",pos);
+        pos= (pos) % this.state.meta.totalPages
+        
+        /*Acá la Funcion Actualizar se va a ejecutar luego de que se setee el Estado,
+        Ya que el setState es ASINCRONICO*/ 
+        this.setState(
+            ()=>({posPag: pos}),this.actualizar
+        );
+    }
+
+    handleAnterior = ()=>{
+        console.log("Entro en Anterios");
+        let pos2=this.state.posPag-1;
+        if(pos2<0)
+            pos2=0;
+        pos2= (pos2) % this.state.meta.totalPages
+        this.setState(
+            ()=>({posPag: pos2}),this.actualizar
+        );
+    }
+
+    handleFiltrar = (e)=>{
+     
+        const { value, name } = e.target;
+        console.log("valor ---->",value);
+
+        this.setState({filtrar: value});
+
+        // axios.get(this.props.url+"?"+"&nombre[icontains]=")
+        //     .then((response)=> {
+        //         // console.log("Datos de la BD: ",response.data.data);
+        //         this.setState({ BD: response.data.data}, () => {
+        //       });
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //     });
+    }
+
+    actionFiltrar = (e)=>{
+        const pos= (this.state.posPag) % this.state.meta.totalPages
+
+        axios.get(this.props.url+"?"+"pageSize="+this.props.cantidad+"&page="+pos+"&nombre[icontains]="+this.state.filtrar)
+        .then((response)=> {
+            // console.log("Datos de la BD: ",response.data.data);
+            this.setState({ BD: response.data.data, meta: response.data.meta}, () => {
+          });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
     
     render() {
-
         return (
-
+            
             <div>
-                {console.log("Columnas: ", this.props.columnas)}
+                {/* {console.log("Cantidad de paginas:-----> ",this.state.meta.totalPages)}
+                {console.log("Columnas: ", this.props.columnas)} */}
                 <ModalG nombre={"Cargar"} actualizar={this.actualizar} columnas={this.props.columnas} />
                 <Table dark>
                     <thead>
@@ -72,8 +127,8 @@ class Tablas extends Component {
                         </tr>
                     </thead>
                     <tbody >
-                        {console.log("dentro de la tabla")}
-                        {console.log(this.state.BD)}
+                        {/* {console.log("dentro de la tabla")}
+                        {console.log(this.state.BD)} */}
                         {this.state.BD.map((persona, i) =>
                             <tr key={i}>
                                 {
@@ -103,6 +158,41 @@ class Tablas extends Component {
                         )}
                     </tbody>
                 </Table>
+                 
+
+                <Row>
+                    <Col xs="4">
+                        <Button color="danger" onClick={this.handleAnterior}>Anterior</Button>
+                    </Col>
+                    <Col xs="4">
+                        <h1>
+                            <Label color="success">{this.state.posPag}</Label>
+                        </h1>
+                    </Col>
+                    <Col xs="4">
+                        <Button color="danger" onClick={this.handleSiguiente}>Siguiente</Button>
+                    </Col>
+                </Row>
+
+                <Row>
+                    
+                </Row>
+
+                <form >
+                    <FormGroup>
+                    <Col xs="2">
+                        <Input name="filtrado" placeholder="Filtrar" onChange={this.handleFiltrar}/><br />   
+                    </Col>
+                    <Col xs="2">
+                        <Button color="danger" onClick={this.actionFiltrar}>Filtrar</Button>
+                    </Col>
+                                         
+                    </FormGroup>
+                </form>
+                   
+                    
+               
+               
             </div>
         );
     }
